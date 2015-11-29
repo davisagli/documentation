@@ -82,39 +82,31 @@ Dexterity (see the
 
 ``settings.py``::
 
-    """
+    """Define add-on settings."""
 
-        Define add-on settings.
-
-    """
-
-    from zope.interface import Interface
-    from zope import schema
-    from Products.CMFCore.interfaces import ISiteRoot
-    from Products.Five.browser import BrowserView
-
-    from plone.z3cform import layout
-    from plone.directives import form
     from plone.app.registry.browser.controlpanel import RegistryEditForm
     from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
+    from plone.supermodel import model
+    from plone.z3cform import layout
+    from Products.CMFCore.interfaces import ISiteRoot
+    from Products.Five.browser import BrowserView
+    from zope import schema
+    from zope.interface import Interface
 
-    class ISettings(form.Schema):
+    class ISettings(model.Schema):
         """ Define settings data structure """
 
-        adminLanguage = schema.TextLine(title=u"Admin language",
-                description=u"Type two letter language code (admins always use this language)")
+        adminLanguage = schema.TextLine(
+            title=u"Admin language",
+            description=u"Type two letter language code (admins always use this language)")
 
     class SettingsEditForm(RegistryEditForm):
-        """
-        Define form logic
-        """
+        """Define form logic"""
         schema = ISettings
         label = u"Silvuple settings"
 
     class SettingsView(BrowserView):
-        """
-        View which wrap the settings form using ControlPanelFormWrapper to a HTML boilerplate frame.
-        """
+        """View which wraps the settings form in the standard Plone template."""
 
         def render(self):
             view_factor = layout.wrap_form(SettingsEditForm, ControlPanelFormWrapper)
@@ -230,55 +222,64 @@ Here are the ingredients:
 
 ``settings.py``::
 
-    """
-
-        Define add-on settings.
-
-    """
-
-    from zope import schema
+    """Define add-on settings."""
     from five import grok
-    from Products.CMFCore.interfaces import ISiteRoot
-    from zope.schema.interfaces import IVocabularyFactory
-
-    from z3c.form.browser.checkbox import CheckBoxFieldWidget
-
-
-    from plone.z3cform import layout
-    from plone.directives import form
     from plone.app.registry.browser.controlpanel import RegistryEditForm
     from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
+    from plone.autoform import directives as form
+    from plone.supermodel import model
+    from plone.z3cform import layout
+    from Products.CMFCore.interfaces import ISiteRoot
+    from Products.Five.browser import BrowserView
+    from z3c.form.browser.checkbox import CheckBoxFieldWidget
+    from zope import schema
+    from zope.schema.interfaces import IVocabularyFactory
 
-    class ISettings(form.Schema):
+    class ISettings(model.Schema):
         """ Define settings data structure """
 
-        adminLanguage = schema.TextLine(title=u"Admin language", description=u"Type two letter language code and admins always use this language")
+        adminLanguage = schema.TextLine(
+            title=u"Admin language",
+            description=u"Type two letter language code and admins always use this language")
 
         form.widget(contentTypes=CheckBoxFieldWidget)
-        contentTypes = schema.List(title=u"Enabled content types",
-                                   description=u"Which content types appear on translation master page",
-                                   required=False,
-                                   value_type=schema.Choice(source="plone.app.vocabularies.ReallyUserFriendlyTypes"),
-                                   )
-
+        contentTypes = schema.List(
+            title=u"Enabled content types",
+            description=u"Which content types appear on translation master page",
+            required=False,
+            value_type=schema.Choice(source="plone.app.vocabularies.ReallyUserFriendlyTypes"),
+        )
 
     class SettingsEditForm(RegistryEditForm):
-        """
-        Define form logic
-        """
+        """Define form logic"""
         schema = ISettings
         label = u"Silvuple settings"
 
-    class SettingsView(grok.CodeView):
-        """
+    class SettingsView(BrowserView):
 
-        """
-        grok.name("silvuple-settings")
-        grok.context(ISiteRoot)
         def render(self):
             view_factor = layout.wrap_form(SettingsEditForm, ControlPanelFormWrapper)
             view = view_factor(self.context, self.request)
             return view()
+
+``configure.zcml``
+
+.. code-block:: xml
+
+    <configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:browser="http://namespaces.zope.org/browser"
+        xmlns:plone="http://namespaces.plone.org/plone"
+        i18n_domain="example.dexterityforms">
+
+        <browser:page
+            name="silvuple-settings"
+            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            class=".settings.SettingsView"
+            permission="cmf.ManagePortal"
+            />
+
+    </configure>
 
 ``profiles/default/registry.xml``:
 
@@ -287,8 +288,6 @@ Here are the ingredients:
     <registry>
         <records interface="silvuple.settings.ISettings" prefix="silvuple.settings.ISettings">
             <!-- Set default values -->
-
-
             <value key="contentTypes" purge="false">
                 <element>Document</element>
                 <element>News Item</element>
@@ -308,9 +307,8 @@ See a section in the `Buildout chapter <http://docs.plone.org/4/en/old-reference
 Configuration using environment variables
 =========================================
 
-If your add-on requires "setting file"
-for few simple settings you can change for each
-buildout you can use operating system environment variables.
+If your add-on requires a few simple settings that you can change for each buildout configuration,
+you can use operating system environment variables.
 
 For example, see:
 
