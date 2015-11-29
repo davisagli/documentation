@@ -15,7 +15,7 @@ following references:
    *z3c.form* forms in Plone.
 -  The `plone.autoform`_ documentation. Explains the raw behaviour of
    the *plone.autoform* library and its directives.
--  The `plone.directives.form`_ documentation. Lists the form base classes.
+-  The `plone.directives.form`_ documentation. Provides base classes for registering forms using grok-style configuration (not officially supported).
 -  The :doc:`Dexterity manual </external/plone.app.dexterity/docs/index>`. Illustrates in various sections how
    *z3c.form* is used in Dexterity.
 
