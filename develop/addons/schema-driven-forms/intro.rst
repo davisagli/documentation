@@ -7,7 +7,6 @@ HTML forms are the cornerstone of modern web applications. When you interact wit
 
 Over the years, several approaches have evolved to deal with forms. A few of the most important ones are:
 
-
 -  Creating a simple view with an HTML form that submits to itself (or
    another view), where the request is validated and processed in custom
    Python code. This is very flexible and requires little learning, but
@@ -25,10 +24,8 @@ Over the years, several approaches have evolved to deal with forms. A few of the
    form fields, constraints and so on. Special views are then used to
    render these using a standard set of widgets. Formlib takes care of
    page flow, validation and the invocation of *actions* - methods that
-   correspond to buttons on the form. Formlib is used for Plone’s
-   control panels and portlets. However, it can be cumbersome to use,
-   especially when it comes to creating custom widgets or more dynamic
-   forms.
+   correspond to buttons on the form. Formlib used to be used for some
+   Plone forms, but they have been converted to z3c.form.
 -  Using *`z3c.form`_*. This is a newer library, inspired by formlib,
    but more flexible and modern.
 
@@ -62,9 +59,8 @@ packages in this tutorial. The most important packages are:
    widget, or specifying relative field ordering. We will use
    *plone.autoform* in this tutorial to simplify form setup.
 -  `plone.directives.form`_ provides tools for registering forms using
-   convention-over-configuration instead of ZCML. We
-   will use *plone.directives.form* to configure our forms in this
-   manual.
+   convention-over-configuration instead of ZCML. It is not officially
+   supported and will not be discussed in this manual.
 
 A note about versions
 ---------------------
